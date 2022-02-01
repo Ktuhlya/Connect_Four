@@ -2,6 +2,8 @@ package connectfour
 
 import java.lang.reflect.Array
 import java.util.*
+const val KRUGLYAK = "o"
+const val LEPEHA = "*"
 
 var name1 = ""
 var name2 = ""
@@ -10,6 +12,8 @@ var rowM =6
 var colM =7
 
 var board = mutableListOf<MutableList<String>>()
+var turnInd =1
+
 
 fun main() {
 
@@ -101,12 +105,53 @@ fun drawBoard () {
     board.add(rowM+1, bottomList)
     for( i in 0 ..rowM+1)
     println(board[i].joinToString(""))
+    Game().turn(1)
 
 }
 
+class Game() {
+
+    fun turn (turnInd : Int) {
+        val listColTurn= mutableListOf<String>()
+        var colTurn = 1
+        var disc = ""
+        when (turnInd) {
+            1 -> {
+                print("$name1's turn:\n>")
+                disc= KRUGLYAK
+            }
+            -1 -> {
+                print("$name2's turn:\n>")
+                disc = LEPEHA
+            }
+        }
+        colTurn = readln()!!.toInt()
+        for (i in board.size-2 downTo 1){
+            listColTurn.add(board[i][colTurn*2])
+
+        }
+       // берёт не ту колонку
+        if (listColTurn.contains(" ")) {
+            board[board.size - listColTurn.indexOf(" ")][colTurn * 2] = disc
+
+
+            for (i in 0..rowM + 1)
+                println(board[i].joinToString(""))
+            turn(turnInd * (-1))
+        }else{
+            println(listColTurn.joinToString(","))
+            println("Column $colTurn is full")
+            turn(turnInd)
+        }
+    }
+
+}
+
+
+
 /*
 
-    board.add(0, indexList)
+
 
 
 
