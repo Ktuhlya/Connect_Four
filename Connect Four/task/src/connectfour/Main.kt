@@ -12,15 +12,15 @@ var colM =7
 var board = mutableListOf<MutableList<String>>()
 
 fun main() {
-    drawBoard()
- /*
+
+
     println("Connect Four")
     print("First player's name:\n>")
     name1 = readLine()!!
     print("Second player's name:\n>")
     name2 = readLine()!!
     Dimension().dimensionPrint()
-*/
+
 
 }
 
@@ -39,6 +39,7 @@ class Dimension() {
           colM = 7
           println("$name1 VS $name2")
           print("$rowM X $colM board")
+          drawBoard()
       } else{
    val regex = Regex(pattern = "\\d*\\d\\s*X\\s*\\d\\d*")
 
@@ -79,23 +80,28 @@ fun drawBoard () {
     for (i in 0 .. rowM-1) {
         val listRow = mutableListOf<String>()
      board.add(listRow)
-        for (j in 0..colM){
-            board[i].add("║ ")
+        for (j in 0..colM*2+1){
+            if ((j % 2) > 0) board[i].add(" ") else board[i].add("|")
         }
     }
-    for(i in 0..colM-1) {
-
-        indexList.add(" ${i+1}")
+    for(i in 0..colM*2) {
+        if (i % 2 > 0) indexList.add("${i/2+1}") else indexList.add(" ")
     }
     board.add(0, indexList)
-
-    for(i in 0..colM) {
-
-        bottomList.add("═ ")
+    for(i in 0..colM*2) {
+        bottomList.add("=")
     }
-    board.add(rowM, bottomList)
-
-    for( i in 0 ..rowM-1)
+    board.add(rowM+1, bottomList)
+    for( i in 0 ..rowM+1)
     println(board[i].joinToString(""))
 
 }
+
+/*
+
+    board.add(0, indexList)
+
+
+
+
+ */
