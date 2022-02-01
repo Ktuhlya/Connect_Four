@@ -74,16 +74,28 @@ class Dimension() {
 }
 
 fun drawBoard () {
+    var indexList = mutableListOf<String>()
+    var bottomList = mutableListOf<String>()
     for (i in 0 .. rowM-1) {
         val listRow = mutableListOf<String>()
      board.add(listRow)
-        for (j in 0..colM-1){
-            board[i].add("║")
-
+        for (j in 0..colM){
+            board[i].add("║ ")
         }
     }
-    for( i in 0 ..rowM-1)
+    for(i in 0..colM-1) {
 
+        indexList.add(" ${i+1}")
+    }
+    board.add(0, indexList)
+
+    for(i in 0..colM) {
+
+        bottomList.add("═ ")
+    }
+    board.add(rowM, bottomList)
+
+    for( i in 0 ..rowM-1)
     println(board[i].joinToString(""))
 
 }
