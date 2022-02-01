@@ -6,17 +6,21 @@ import java.util.*
 var name1 = ""
 var name2 = ""
 
-var rowM =1
-var colM =1
+var rowM =6
+var colM =7
+
+var board = mutableListOf<MutableList<String>>()
 
 fun main() {
+    drawBoard()
+ /*
     println("Connect Four")
     print("First player's name:\n>")
     name1 = readLine()!!
     print("Second player's name:\n>")
     name2 = readLine()!!
     Dimension().dimensionPrint()
-
+*/
 
 }
 
@@ -55,6 +59,7 @@ class Dimension() {
                colM = col
                println("$name1 VS $name2")
                println("$rowM X $colM board")
+               drawBoard()
            }
 
       }
@@ -66,4 +71,19 @@ class Dimension() {
     }
     }
   }
+}
+
+fun drawBoard () {
+    for (i in 0 .. rowM-1) {
+        val listRow = mutableListOf<String>()
+     board.add(listRow)
+        for (j in 0..colM-1){
+            board[i].add("║")
+
+        }
+    }
+    for( i in 0 ..rowM-1)
+
+    println(board[i].joinToString(""))
+
 }
