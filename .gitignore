@@ -1,0 +1,4 @@
+# Project exclude paths
+/.gradle/
+/Topics/The Math library/The angle between vectors/out/
+/Topics/The Math library/The angle between vectors/out/production/classes/
