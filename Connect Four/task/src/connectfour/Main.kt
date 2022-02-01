@@ -81,7 +81,7 @@ fun drawBoard () {
         val listRow = mutableListOf<String>()
      board.add(listRow)
         for (j in 0..colM*2+1){
-            if ((j % 2) > 0) board[i].add(" ") else board[i].add("|")
+            if ((j % 2) > 0) board[i].add(" ") else board[i].add("║")
         }
     }
     for(i in 0..colM*2) {
@@ -89,7 +89,14 @@ fun drawBoard () {
     }
     board.add(0, indexList)
     for(i in 0..colM*2) {
-        bottomList.add("=")
+        when  {
+            i== 0 -> bottomList.add("╚")
+            i== colM*2 -> bottomList.add("╝")
+            i%2 > 0 -> bottomList.add("═")
+            i%2 == 0 -> bottomList.add("╩")
+
+        }
+
     }
     board.add(rowM+1, bottomList)
     for( i in 0 ..rowM+1)
