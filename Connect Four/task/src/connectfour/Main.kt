@@ -1,6 +1,5 @@
 package connectfour
 
-import java.lang.reflect.Array
 import java.util.*
 const val KRUGLYAK = "o"
 const val LEPEHA = "*"
@@ -33,10 +32,10 @@ class Dimension() {
     fun dimensionPrint(){
         println("Set the board dimensions (Rows x Columns)")
         print("Press Enter for default (6 x 7)\n>")
-       dimensionChek(readLine()!!.trim())
+       dimensionCheck(readLine()!!.trim())
     }
 
-  private  fun dimensionChek (string: String) {
+  private  fun dimensionCheck (string: String) {
 
       if (string=="") {
           rowM = 6
@@ -112,38 +111,66 @@ fun drawBoard () {
 class Game() {
 
     fun turn (turnInd : Int) {
-        val listColTurn= mutableListOf<String>()
-        var colTurn = 1
+        val listColTurn = mutableListOf<String>()
+        var colTurn = ""
         var disc = ""
         when (turnInd) {
             1 -> {
                 print("$name1's turn:\n>")
-                disc= KRUGLYAK
+                disc = KRUGLYAK
             }
             -1 -> {
                 print("$name2's turn:\n>")
                 disc = LEPEHA
             }
         }
-        colTurn = readln()!!.toInt()
-        for (i in board.size-2 downTo 1){
-            listColTurn.add(board[i][colTurn*2 -1])
-            println(listColTurn)
-
+        ////////
+        colTurn = readln()!!
+        ///////
+        if (colTurn == "end") {
+            println("Game over!")
+            System.exit(0)
         }
-       // берёт не ту колонку
-        if (listColTurn.contains(" ")) {
-            board[colM - listColTurn.indexOf(" ") -1][colTurn * 2 -1] = disc
+        if (turnCheck(colTurn)) {
+
+            for (i in board.size - 2 downTo 1) {
+                listColTurn.add(board[i][colTurn.toInt() * 2 - 1])
+                // println(listColTurn)
+
+            }
+            if (listColTurn.contains(" ")) {
+                board[colM - listColTurn.indexOf(" ") - 1][colTurn.toInt() * 2 - 1] = disc
 
 
-            for (i in 0..rowM + 1)
-                println(board[i].joinToString(""))
-            turn(turnInd * (-1))
+                for (i in 0..rowM + 1)
+                    println(board[i].joinToString(""))
+                turn(turnInd * (-1))
+            } else {
+                println(listColTurn.joinToString(","))
+                println("Column $colTurn is full")
+                turn(turnInd)
+            }
         }else{
-            println(listColTurn.joinToString(","))
-            println("Column $colTurn is full")
             turn(turnInd)
         }
+    }
+
+    fun turnCheck (strCheck : String) : Boolean{
+        val regex = Regex("\\D")
+        val regexD =Regex("\\d")
+        if (!regex.matches(strCheck) && regexD.matches(strCheck)){
+            if (strCheck.toInt() in 1 ..colM ) {
+                return true
+            } else {
+                println("The column number is out of range (1 - $colM)")
+                return false
+            }
+        } else{
+            println("Incorrect column number")
+            return false
+        }
+
+
     }
 
 }
