@@ -189,9 +189,12 @@ class Game() {
                 if (board[i][j] == " ") {
                     countForDrow = countForDrow +1
                 }
+
             }
+
+
           }
-        if (countForDrow == 0 ) println("gfhfsdhdtrhsdthstrh")
+
 
         // vertical win
         for (j in 1..colM *2 step (2)) {
@@ -228,6 +231,7 @@ class Game() {
                 ) win(turnInd)
             }
        }
+       if (countForDrow == 6 ) win(0)
 
         turn(turnInd )
 
@@ -238,7 +242,7 @@ class Game() {
         when (turnInd) {
             1 -> print("Player $name2 won\nGame over!")
             -1 -> print("Player $name1 won\nGame over!")
-            0 -> print("It is draw\nGame over!")
+            0 -> print("It is a draw\nGame over!")
         }
         System.exit(0)
     }
