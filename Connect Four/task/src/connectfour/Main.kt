@@ -127,12 +127,13 @@ class Game() {
         }
         colTurn = readln()!!.toInt()
         for (i in board.size-2 downTo 1){
-            listColTurn.add(board[i][colTurn*2])
+            listColTurn.add(board[i][colTurn*2 -1])
+            println(listColTurn)
 
         }
        // берёт не ту колонку
         if (listColTurn.contains(" ")) {
-            board[board.size - listColTurn.indexOf(" ")][colTurn * 2] = disc
+            board[colM - listColTurn.indexOf(" ") -1][colTurn * 2 -1] = disc
 
 
             for (i in 0..rowM + 1)
