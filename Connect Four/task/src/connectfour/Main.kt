@@ -13,6 +13,8 @@ var colM =7
 var board = mutableListOf<MutableList<String>>()
 var turnInd =1
 
+var countForDrow =0
+
 
 fun main() {
 
@@ -41,7 +43,7 @@ class Dimension() {
           rowM = 6
           colM = 7
           println("$name1 VS $name2")
-          print("$rowM X $colM board")
+          println("$rowM X $colM board")
           drawBoard()
       } else{
    val regex = Regex(pattern = "\\d*\\d\\s*X\\s*\\d\\d*")
@@ -110,7 +112,7 @@ fun drawBoard () {
 
 class Game() {
 
-    fun turn (turnInd : Int) {
+    fun turn(turnInd: Int) {
         val listColTurn = mutableListOf<String>()
         var colTurn = ""
         var disc = ""
@@ -133,39 +135,42 @@ class Game() {
         }
         if (turnCheck(colTurn)) {
 
-            for (i in rowM   downTo 1) {
+            for (i in rowM downTo 1) {
                 listColTurn.add(board[i][colTurn.toInt() * 2 - 1])
-               //  println(listColTurn)
+                //  println(listColTurn)
 
             }
             if (listColTurn.contains(" ")) {
-                board[rowM - listColTurn.indexOf(" ") ][colTurn.toInt() * 2 - 1] = disc
+                board[rowM - listColTurn.indexOf(" ")][colTurn.toInt() * 2 - 1] = disc
 
 
-                for (i in 0..rowM + 1)
+                for (i in 0..rowM + 1) {
                     println(board[i].joinToString(""))
-                turn(turnInd * (-1))
+                }
+
+                winConditionCheck(board)
+                //      turn(turnInd * (-1))
             } else {
-               // println(listColTurn.joinToString(","))
+                // println(listColTurn.joinToString(","))
                 println("Column $colTurn is full")
                 turn(turnInd)
             }
-        }else{
+        } else {
             turn(turnInd)
         }
     }
 
-    fun turnCheck (strCheck : String) : Boolean{
+    fun turnCheck(strCheck: String): Boolean {
         val regex = Regex("\\D")
-        val regexD =Regex("\\d+")
-        if (!regex.matches(strCheck) && regexD.matches(strCheck)){
-            if (strCheck.toInt() in 1 ..colM ) {
+        val regexD = Regex("\\d+")
+        if (!regex.matches(strCheck) && regexD.matches(strCheck)) {
+            if (strCheck.toInt() in 1..colM) {
                 return true
             } else {
                 println("The column number is out of range (1 - $colM)")
                 return false
             }
-        } else{
+        } else {
             println("Incorrect column number")
             return false
         }
@@ -173,13 +178,77 @@ class Game() {
 
     }
 
-}
+    fun winConditionCheck(board: MutableList<MutableList<String>>) {
 
+        turnInd = turnInd * -1
+        countForDrow = 0
+
+        // draw
+        for ( i in 0 .. rowM) {
+            for (j in 0..colM * 2) {
+                if (board[i][j] == " ") {
+                    countForDrow = countForDrow +1
+                }
+            }
+          }
+        if (countForDrow == 0 ) println("gfhfsdhdtrhsdthstrh")
+
+        // vertical win
+        for (j in 1..colM *2 step (2)) {
+            for (i in rowM downTo 1) {
+                if ((board[i][j] == board[i - 1][j]) && (board[i][j] == board[i - 2][j]) &&
+                    (board[i][j] == board[i - 3][j]) && (board[i][j] != " ")
+                ) win(turnInd)
+            }
+        }
+
+        // horizontal win
+       for(i in 1 .. rowM){
+           for (j in colM*2 +1 downTo 6 step (2)) {
+               if ((board[i][j] == board[i][j-2]) && (board[i][j] == board[i][j-4]) &&
+                   (board[i][j] == board[i][j-6]) && (board[i][j] != " ")
+               ) win(turnInd)
+           }
+       }
+
+       // iskosokal win
+        for(i in 1 .. rowM){
+            for (j in 1 ..colM*2-6 step (2)) {
+                if ((board[i][j] == board[i+1][j+2]) && (board[i][j] == board[i+2][j+4]) &&
+                    (board[i][j] == board[i+3][j+6]) && (board[i][j] != " ")
+                ) win(turnInd)
+            }
+        }
+
+        // obratniy iskosokal win
+        for(i in rowM downTo 1){
+            for (j in colM*2 -1  downTo 6 step (2)) {
+                if ((board[i][j] == board[i+1][j-2]) && (board[i][j] == board[i+2][j-4]) &&
+                    (board[i][j] == board[i+3][j-6]) && (board[i][j] != " ")
+                ) win(turnInd)
+            }
+       }
+
+        turn(turnInd )
+
+    }
+
+    fun win(turnInd: Int){
+
+        when (turnInd) {
+            1 -> print("Player $name2 won\nGame over!")
+            -1 -> print("Player $name1 won\nGame over!")
+            0 -> print("It is draw\nGame over!")
+        }
+        System.exit(0)
+    }
+}
 
 
 /*
 
 
+turn(turnInd * (-1))
 
 
 
