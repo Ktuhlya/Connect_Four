@@ -133,20 +133,20 @@ class Game() {
         }
         if (turnCheck(colTurn)) {
 
-            for (i in board.size - 2 downTo 1) {
+            for (i in rowM   downTo 1) {
                 listColTurn.add(board[i][colTurn.toInt() * 2 - 1])
-                // println(listColTurn)
+               //  println(listColTurn)
 
             }
             if (listColTurn.contains(" ")) {
-                board[colM - listColTurn.indexOf(" ") - 1][colTurn.toInt() * 2 - 1] = disc
+                board[rowM - listColTurn.indexOf(" ") ][colTurn.toInt() * 2 - 1] = disc
 
 
                 for (i in 0..rowM + 1)
                     println(board[i].joinToString(""))
                 turn(turnInd * (-1))
             } else {
-                println(listColTurn.joinToString(","))
+               // println(listColTurn.joinToString(","))
                 println("Column $colTurn is full")
                 turn(turnInd)
             }
@@ -157,7 +157,7 @@ class Game() {
 
     fun turnCheck (strCheck : String) : Boolean{
         val regex = Regex("\\D")
-        val regexD =Regex("\\d")
+        val regexD =Regex("\\d+")
         if (!regex.matches(strCheck) && regexD.matches(strCheck)){
             if (strCheck.toInt() in 1 ..colM ) {
                 return true
