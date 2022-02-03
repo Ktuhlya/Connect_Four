@@ -1,7 +1,6 @@
 package connectfour
 
 import java.util.*
-import kotlin.time.measureTime
 
 const val KRUGLYAK = "o"
 const val LEPEHA = "*"
@@ -19,6 +18,9 @@ var countForDrow =0
 
 var multiple = false
 var gameCount = 0
+var name1Status = 0
+var name2Status = 0
+var totalGame: Int = 1
 
 
 fun main() {
@@ -84,6 +86,8 @@ class Dimension() {
 fun drawBoard () {
     var indexList = mutableListOf<String>()
     var bottomList = mutableListOf<String>()
+
+  //  turnInd = turnInd * (-1)
     for (i in 0 .. rowM-1) {
         val listRow = mutableListOf<String>()
      board.add(listRow)
@@ -108,7 +112,7 @@ fun drawBoard () {
     board.add(rowM+1, bottomList)
     for( i in 0 ..rowM+1)
     println(board[i].joinToString(""))
-    Game().turn(1)
+    Game().turn(turnInd)
 
 }
 
@@ -240,27 +244,35 @@ class Game() {
 
     fun win(winInd: Int) {
 
-        var name1Status = 0
-        var name2Status = 0
-
         when (winInd) {
             1 -> {
                 gameCount++
                 name2Status += 2
                 println("Player $name2 won\nScore")
                 println("$name1: $name1Status $name2: $name2Status")
-                println("Game #${gameCount}")
-                board.clear()
-                drawBoard()
+                if (totalGame >= gameCount) {
+                    println("Game #${gameCount}")
+                    board.clear()
+                   // println(totalGame)
+                    drawBoard()
+                }else{
+                   println("Game over!")
+                    System.exit(0)
+                }
             }
             -1 -> {
                 gameCount++
                 name1Status += 2
-                println("Player $name2 won\nScore")
+                println("Player $name1 won\nScore")
                 println("$name1: $name1Status $name2: $name2Status")
-                println("Game #${gameCount}")
-                board.clear()
-                drawBoard()
+                if (totalGame >= gameCount) {
+                    println("Game #${gameCount}")
+                    board.clear()
+                    drawBoard()
+                }else{
+                    println("Game over!")
+                    System.exit(0)
+                }
             }
             0 ->{
                 gameCount++
@@ -268,13 +280,18 @@ class Game() {
                 name1Status += 1
                 println("It is a draw\nScore")
                 println("$name1: $name1Status $name2: $name2Status")
-                println("Game #${gameCount}")
-                board.clear()
-                drawBoard()
+                if (totalGame >= gameCount) {
+                    println("Game #${gameCount}")
+                    board.clear()
+                    drawBoard()
+                }else{
+                    println("Game over!")
+                    System.exit(0)
+                }
             }
 
         }
-        System.exit(0)
+
     }
 
     fun optionGame(): String {
@@ -290,6 +307,7 @@ Input a number of games:"""
             multiple = false
             println("$name1 VS $name2")
             println("$rowM X $colM board")
+            totalGame = 1
             result = "Single game"
         }else {
             if ((!regex.matches(str)) || (str.toInt() == 0)) {
@@ -300,6 +318,7 @@ Input a number of games:"""
                     multiple = false
                     println("$name1 VS $name2")
                     println("$rowM X $colM board")
+                    totalGame = 1
                     result = "Single game"
                 } else {
                     multiple = true
@@ -307,6 +326,8 @@ Input a number of games:"""
                     println("$name1 VS $name2")
                     println("$rowM X $colM board")
                     gameCount = 1
+                    totalGame = str.toInt()
+                   // println(totalGame)
                     result = "Total ${str.toInt()} games\n" +
                             "Game #$gameCount"
                 }
