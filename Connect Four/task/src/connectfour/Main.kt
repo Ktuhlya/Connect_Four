@@ -1,6 +1,8 @@
 package connectfour
 
 import java.util.*
+import kotlin.time.measureTime
+
 const val KRUGLYAK = "o"
 const val LEPEHA = "*"
 
@@ -14,6 +16,9 @@ var board = mutableListOf<MutableList<String>>()
 var turnInd =1
 
 var countForDrow =0
+
+var multiple = false
+var gameCount = 0
 
 
 fun main() {
@@ -42,8 +47,7 @@ class Dimension() {
       if (string=="") {
           rowM = 6
           colM = 7
-          println("$name1 VS $name2")
-          println("$rowM X $colM board")
+          println(Game().optionGame())
           drawBoard()
       } else{
    val regex = Regex(pattern = "\\d*\\d\\s*X\\s*\\d\\d*")
@@ -63,8 +67,7 @@ class Dimension() {
        }else{
            rowM = row
                colM = col
-               println("$name1 VS $name2")
-               println("$rowM X $colM board")
+               println(Game().optionGame())
                drawBoard()
            }
 
@@ -72,7 +75,6 @@ class Dimension() {
 
     }else{
     println("Invalid input")
-
        dimensionPrint()
     }
     }
@@ -111,7 +113,7 @@ fun drawBoard () {
 }
 
 class Game() {
-
+    private var result = "77"
     fun turn(turnInd: Int) {
         val listColTurn = mutableListOf<String>()
         var colTurn = ""
@@ -175,7 +177,6 @@ class Game() {
             return false
         }
 
-
     }
 
     fun winConditionCheck(board: MutableList<MutableList<String>>) {
@@ -184,20 +185,20 @@ class Game() {
         countForDrow = 0
 
         // draw
-        for ( i in 0 .. rowM) {
+        for (i in 0..rowM) {
             for (j in 0..colM * 2) {
                 if (board[i][j] == " ") {
-                    countForDrow = countForDrow +1
+                    countForDrow = countForDrow + 1
                 }
 
             }
 
 
-          }
+        }
 
 
         // vertical win
-        for (j in 1..colM *2 step (2)) {
+        for (j in 1..colM * 2 step (2)) {
             for (i in rowM downTo 1) {
                 if ((board[i][j] == board[i - 1][j]) && (board[i][j] == board[i - 2][j]) &&
                     (board[i][j] == board[i - 3][j]) && (board[i][j] != " ")
@@ -206,47 +207,119 @@ class Game() {
         }
 
         // horizontal win
-       for(i in 1 .. rowM){
-           for (j in colM*2 +1 downTo 6 step (2)) {
-               if ((board[i][j] == board[i][j-2]) && (board[i][j] == board[i][j-4]) &&
-                   (board[i][j] == board[i][j-6]) && (board[i][j] != " ")
-               ) win(turnInd)
-           }
-       }
+        for (i in 1..rowM) {
+            for (j in colM * 2 + 1 downTo 6 step (2)) {
+                if ((board[i][j] == board[i][j - 2]) && (board[i][j] == board[i][j - 4]) &&
+                    (board[i][j] == board[i][j - 6]) && (board[i][j] != " ")
+                ) win(turnInd)
+            }
+        }
 
-       // iskosokal win
-        for(i in 1 .. rowM){
-            for (j in 1 ..colM*2-6 step (2)) {
-                if ((board[i][j] == board[i+1][j+2]) && (board[i][j] == board[i+2][j+4]) &&
-                    (board[i][j] == board[i+3][j+6]) && (board[i][j] != " ")
+        // iskosokal win
+        for (i in 1..rowM) {
+            for (j in 1..colM * 2 - 6 step (2)) {
+                if ((board[i][j] == board[i + 1][j + 2]) && (board[i][j] == board[i + 2][j + 4]) &&
+                    (board[i][j] == board[i + 3][j + 6]) && (board[i][j] != " ")
                 ) win(turnInd)
             }
         }
 
         // obratniy iskosokal win
-        for(i in rowM downTo 1){
-            for (j in colM*2 -1  downTo 6 step (2)) {
-                if ((board[i][j] == board[i+1][j-2]) && (board[i][j] == board[i+2][j-4]) &&
-                    (board[i][j] == board[i+3][j-6]) && (board[i][j] != " ")
+        for (i in rowM downTo 1) {
+            for (j in colM * 2 - 1 downTo 6 step (2)) {
+                if ((board[i][j] == board[i + 1][j - 2]) && (board[i][j] == board[i + 2][j - 4]) &&
+                    (board[i][j] == board[i + 3][j - 6]) && (board[i][j] != " ")
                 ) win(turnInd)
             }
-       }
-       if (countForDrow == 6 ) win(0)
+        }
+        if (countForDrow == 6) win(0)
 
-        turn(turnInd )
+        turn(turnInd)
 
     }
 
-    fun win(turnInd: Int){
+    fun win(winInd: Int) {
 
-        when (turnInd) {
-            1 -> print("Player $name2 won\nGame over!")
-            -1 -> print("Player $name1 won\nGame over!")
-            0 -> print("It is a draw\nGame over!")
+        var name1Status = 0
+        var name2Status = 0
+
+        when (winInd) {
+            1 -> {
+                gameCount++
+                name2Status += 2
+                println("Player $name2 won\nScore")
+                println("$name1: $name1Status $name2: $name2Status")
+                println("Game #${gameCount}")
+                board.clear()
+                drawBoard()
+            }
+            -1 -> {
+                gameCount++
+                name1Status += 2
+                println("Player $name2 won\nScore")
+                println("$name1: $name1Status $name2: $name2Status")
+                println("Game #${gameCount}")
+                board.clear()
+                drawBoard()
+            }
+            0 ->{
+                gameCount++
+                name2Status += 1
+                name1Status += 1
+                println("It is a draw\nScore")
+                println("$name1: $name1Status $name2: $name2Status")
+                println("Game #${gameCount}")
+                board.clear()
+                drawBoard()
+            }
+
         }
         System.exit(0)
     }
+
+    fun optionGame(): String {
+        val regex = Regex(pattern = "\\d+")
+        println(
+            """Do you want to play single or multiple games?
+For a single game, input 1 or press Enter
+Input a number of games:"""
+        )
+        print(">")
+        var str = readLine()!!.trim()
+        if (str == ""){
+            multiple = false
+            println("$name1 VS $name2")
+            println("$rowM X $colM board")
+            result = "Single game"
+        }else {
+            if ((!regex.matches(str)) || (str.toInt() == 0)) {
+                println("Invalid input")
+                optionGame()
+            } else {
+                if (str.toInt() == 1) {
+                    multiple = false
+                    println("$name1 VS $name2")
+                    println("$rowM X $colM board")
+                    result = "Single game"
+                } else {
+                    multiple = true
+                    gameCount = str.toInt()
+                    println("$name1 VS $name2")
+                    println("$rowM X $colM board")
+                    gameCount = 1
+                    result = "Total ${str.toInt()} games\n" +
+                            "Game #$gameCount"
+                }
+
+            }
+        }
+        return result
+    }
 }
+
+
+
+
 
 
 /*
